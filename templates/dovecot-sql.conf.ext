@@ -1,7 +1,7 @@
 driver = <%= @driver %>
 connect = host=<%= @dbhost %> port=<%= @dbport %> dbname=<%= @dbname %> user=<%= @dbusername %> password=<%= @dbpassword %>
 default_pass_scheme = <%= @default_pass_scheme %>
-user_query = \
+password_query = \
     SELECT username as user, password, '<%= @mailstorepath %>' as userdb_home, \
     'maildir:<%= @mailstorepath %>' as userdb_mail, 6000 as userdb_uid, 6000 as userdb_gid \
     FROM mailbox WHERE username = '%u' AND active = '1'
