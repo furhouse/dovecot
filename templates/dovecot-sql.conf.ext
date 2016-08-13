@@ -2,9 +2,6 @@ driver = <%= @driver %>
 connect = host=<%= @dbhost %> port=<%= @dbport %> dbname=<%= @dbname %> user=<%= @dbusername %> password=<%= @dbpassword %>
 default_pass_scheme = <%= @default_pass_scheme %>
 user_query = \
-    SELECT '<%= @mailstorepath %>'||SUBSTRING(email from (position('@' in email)+1) for (char_length(email)-position('@' in email)+1)) || '/' || SUBSTRING(email from 0 for position('@' in email)) AS home, '*:bytes='||quota AS quota_rule \
-    FROM users WHERE email = '%u' 
-password_query = \
-    SELECT '<%= @mailstorepath %>'||SUBSTRING(email from (position('@' in email)+1) for (char_length(email)-position('@' in email)+1)) || '/' || SUBSTRING(email from 0 for position('@' in email)) AS userdb_home, \
-        email AS user, password, '*:bytes='||quota AS userdb_quota_rule \
-    FROM users WHERE email = '%u'
+    SELECT username as user, password, '<%= @mailstorepath %>' as userdb_home, \
+    'maildir:<%= @mailstorepath %>' as userdb_mail, 6000 as userdb_uid, 6000 as userdb_gid \
+    FROM mailbox WHERE username = '%u' AND active = '1'
