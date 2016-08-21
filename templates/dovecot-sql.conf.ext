@@ -1,7 +1,16 @@
 driver = <%= @driver %>
 connect = host=<%= @dbhost %> port=<%= @dbport %> dbname=<%= @dbname %> user=<%= @dbusername %> password=<%= @dbpassword %>
 default_pass_scheme = <%= @default_pass_scheme %>
+
+user_query = \
+        SELECT '<%= @mailstorepath %>%d/%u' as home, \
+        'maildir:<%= @mailstorepath %>%d/%u' as mail, \
+        6000 AS uid, 6000 AS gid, concat('dirsize:storage=',  quota) \
+        AS quota FROM mailbox WHERE username = '%u' AND active = '1'
+
 password_query = \
-    SELECT username as user, password, '<%= @mailstorepath %>' as userdb_home, \
-    'maildir:<%= @mailstorepath %>' as userdb_mail, 6000 as userdb_uid, 6000 as userdb_gid \
-    FROM mailbox WHERE username = '%u' AND active = '1'
+        SELECT username as user, password, \
+        '<%= @mailstorepath %>%d/%u' as userdb_home, \
+        'maildir:<%= @mailstorepath %>%d/%u' as userdb_mail, \
+        6000 as userdb_uid, 6000 as userdb_gid FROM mailbox \
+        WHERE username = '%u' AND active = '1'
